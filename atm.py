@@ -59,10 +59,10 @@ while True:
 
     if choice == 'b':
         print("Balance")
-        balance = sum((amount
-            for number, amount
-            in history
-            if number == account_number))
+        balance = Decimal(0.0)
+        for number, amount in history:
+            if number == account_number:
+                balance += amount
         print(balance)
         continue
 
