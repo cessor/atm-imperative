@@ -1,23 +1,25 @@
 from decimal import Decimal
 import getpass
 
-history = []
+
+def lines(path):
+    with open('history.txt') as file_:
+        for line in file_:
+            yield line
+
+
+def records(lines):
+    for line in lines:
+        yield line.split(',')
+
+
 # Number,Amount
-with open('history.txt') as file_:
-    for line in file_:
-        number, amount = line.split(',')
-        amount = Decimal(amount)
-        history.append((number, amount))
+history = [(number, Decimal(amount)) for line in records(lines('history.txt'))]
 
-accounts = []
 # Number,Pin
-with open('accounts.txt') as file_:
-    for line in file_:
-        accounts.append(line.split(','))
+accounts = list(records(lines('accounts.txt')))
 
-account_numbers = []
-for number, pin in accounts:
-    account_numbers.append(number)
+account_numbers = [number for number,pin in accounts]
 
 print('***********************')
 print('Heidelberg Student Bank')
@@ -28,10 +30,13 @@ if account_number not in account_numbers:
     print("Unknown Account.")
     exit()
 else:
-    for number, pin in accounts:
-        if number == account_number:
-            pin = pin.strip()
-            break
+    pins = [
+        pin.strip()
+        for number,pin
+        in accounts
+        if number == account_number
+    ]
+    pin = pins[0]
 
 logged_in = False
 
@@ -96,9 +101,7 @@ while True:
         break
 
 # Program Done. Save History.
-lines = []
-for entry in history:
-    lines.append('%s,%s' % entry)
+lines = ['%s,%s' % entry for entry in history]
 content = '\n'.join(lines)
 
 with open('history.txt', 'w') as file_:
