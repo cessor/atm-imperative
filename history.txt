@@ -1,0 +1,10 @@
+Johannes,1000.0
+Johannes,1000
+Johannes,-500
+Johannes,-500
+Martin,1000
+Martin,-10000
+Johannes,-1000
+Johannes,1000
+Johannes,1000
+Johannes,-100
