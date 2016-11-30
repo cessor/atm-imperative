@@ -16,7 +16,7 @@ with open('accounts.txt') as file_:
         accounts.append(line.split(','))
 
 account_numbers = []
-for number,pin in accounts:
+for number, pin in accounts:
     account_numbers.append(number)
 
 print('***********************')
@@ -28,7 +28,7 @@ if account_number not in account_numbers:
     print("Unknown Account.")
     exit()
 else:
-    for number,pin in accounts:
+    for number, pin in accounts:
         if number == account_number:
             pin = pin.strip()
             break
