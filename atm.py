@@ -3,7 +3,7 @@ import getpass
 
 
 def lines(path):
-    with open('history.txt') as file_:
+    with open(path) as file_:
         for line in file_:
             yield line
 
@@ -14,12 +14,16 @@ def records(lines):
 
 
 # Number,Amount
-history = [(number, Decimal(amount)) for line in records(lines('history.txt'))]
+history = [
+    (number, Decimal(amount))
+    for number, amount
+    in records(lines('history.txt'))
+]
 
 # Number,Pin
 accounts = list(records(lines('accounts.txt')))
 
-account_numbers = [number for number,pin in accounts]
+account_numbers = [number for number, pin in accounts]
 
 print('***********************')
 print('Heidelberg Student Bank')
@@ -32,11 +36,12 @@ if account_number not in account_numbers:
 else:
     pins = [
         pin.strip()
-        for number,pin
+        for number, pin
         in accounts
         if number == account_number
     ]
     pin = pins[0]
+
 
 logged_in = False
 
@@ -64,10 +69,13 @@ while True:
 
     if choice == 'b':
         print("Balance")
-        balance = Decimal(0.0)
-        for number, amount in history:
-            if number == account_number:
-                balance += amount
+        transactions = [
+            amount
+            for number, amount
+            in history
+            if number == account_number
+        ]
+        balance = sum(transactions)
         print(balance)
         continue
 
@@ -87,13 +95,15 @@ while True:
 
     if choice == 'r':
         print('Report')
-        for number, amount in history:
-            if number != account_number:
-                continue
-            if amount < Decimal(0.0):
-                print(amount * Decimal(-1), 'Withdraw')
-            else:
-                print(amount, 'Deposit')
+        lines = [
+            '%s Withdraw' % (amount * Decimal(-1))
+            if amount < Decimal(0.0)
+            else '%s Deposit' % amount
+            for number, amount
+            in history
+            if number == account_number
+        ]
+        print('\n'.join(lines))
         continue
 
     if choice == 'q':
